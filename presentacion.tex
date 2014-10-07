@@ -162,10 +162,8 @@
             $
         \end{block}
 
-        \begin{minipage}[t][10em][t]{\textwidth}
+        \begin{minipage}[c][10em][c]{\textwidth}
             \begin{center}
-                \vspace{1em}
-
                 \only<2-2>{
                         $$ 
                         \begin{bmatrix}
@@ -181,8 +179,8 @@
                 \only<3-3>{
                     $$ 
                     \begin{bmatrix}
-                        \ddots & \vdots      & \vdots & \iddots\\
-                        \cdots & \circled{4} & 6      & \cdots
+                        \ddots & \vdots      & \vdots       & \iddots\\
+                        \cdots & \circled{4} & \circledd{6} & \cdots
                     \end{bmatrix}
                     $$
 
@@ -192,10 +190,10 @@
                 \only<4-4>{
                     $$ 
                     \begin{bmatrix}
-                        \ddots  & \vdots      \\
-                        \cdots  & \circled{5} \\
-                        \cdots  & 1           \\
-                        \iddots & \vdots      \\
+                        \ddots  & \vdots       \\
+                        \cdots  & \circled{5}  \\
+                        \cdots  & \circledd{1} \\
+                        \iddots & \vdots       \\
                     \end{bmatrix}
                     $$
 
@@ -205,14 +203,14 @@
                 \only<5-5>{
                     $$ 
                     \begin{bmatrix}
-                        \ddots  & \vdots      & \vdots & \iddots \\
-                        \cdots  & \circled{3} & 4      & \cdots  \\
-                        \cdots  & 2           & 2      & \cdots  \\
-                        \iddots & \vdots      & \vdots & \ddots  \\
+                        \ddots  & \vdots       & \vdots       & \iddots \\
+                        \cdots  & \circled{3}  & \circledd{4} & \cdots  \\
+                        \cdots  & \circledd{2} & 2            & \cdots  \\
+                        \iddots & \vdots       & \vdots       & \ddots  \\
                     \end{bmatrix}
                     $$
 
-                    Caso general.
+                    Podemos movernos tanto hacia la derecha como hacia abajo.
                 }
             \end{center}
         \end{minipage}
@@ -220,7 +218,7 @@
 
 
     \begin{frame}
-        \frametitle{Condiciones para poder aplicar la Técnica de Programación Dinámica}
+        \frametitle{Condiciones para poder aplicar Programación Dinámica}
 
         \begin{center}
             ¿Puedo resolver este ejercicio con programación dinámica?
