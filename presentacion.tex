@@ -7,6 +7,8 @@
 \usepackage{textpos} % Provee entorno textblock
 \usepackage{mathdots} % Provee macro \iddots
 \usepackage{listings} % Provee entorno lstlisting
+\usepackage[nomessages]{fp} % http://ctan.org/pkg/fp
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Modo handout (comentar para versión presentación en pantalla/proyector)
@@ -42,8 +44,19 @@
 \newcommand*\circledw[1]{\circledcolor{#1}{white}{solid}}
 \newcommand*\circledd[1]{\circledcolor{#1}{black}{dashed}}
 
-% Atajo
+% Atajos
 \newcommand{\matA}{A \in \mathbb{N}^{m \times n}}
+\newcommand{\marcar}[2]{%
+    \FPeval{\result}{clip(#2 - 1)}%
+    \only<-\result>{%
+        \circledw{#1}%
+    }%
+    \only<#2->{%
+       \circled{#1}%
+    }%
+}
+
+
 
 \title{Programación Dinámica}
 \subtitle{
@@ -609,44 +622,48 @@
         }
     \end{frame}
 
-    % \begin{frame}
-    %     \frametitle{Construcción de una Solución Óptima}
-    %     \framesubtitle{Ya sabemos el costo del camino óptimo; ahora hallemos ése camino}
+    \begin{frame}
+        \frametitle{Construcción de una Solución Óptima}
+        \framesubtitle{Ya sabemos el costo del camino óptimo; ahora hallemos ése camino}
 
-    %     Construimos el camino óptimo mirando la matriz $dp$ donde guardamos los valores del camino óptimo hacia $(m, n)$ desde cada coordenada $(i, j)$.
+        Construimos el camino óptimo mirando la matriz $dp$ y siguiendo el algoritmo ``al revés'', partiendo de $(1, 1)$ hasta llegar a $(m, n)$.
 
-    %     \vspace{1em}
+        \uncover<2->{
+            \vspace{1em}
+            Nos paramos en $A_{1,1}$, marcamos esa coordenada, comparamos $dp_{2,1}$ y $dp_{1,2}$ y nos movemos a $A_{2,1}$ o $A_{1,2}$ según cuál de las respectivas posiciones en $dp$ tenga menor valor. \uncover<4->{Repetimos hasta llegar a $A_{m,n}$.}
+        }
 
-    %     Nos paramos en $dp_{1,1}$, marcamos esa coordenada y nos movemos a la casilla contigua cuyo valor sea menor (sólo hacia la derecha ó abajo.) Repetimos hasta llegar a $dp_{m,n}$.
+        \uncover<2->{
+            \begin{columns}
+                \column{.4\textwidth}
+                $$
+                A =
+                \begin{bmatrix}
+                    \marcar{2}{3} & 8             & 3             & 4 \\
+                    \marcar{5}{4} & 3             & 4             & 5 \\
+                    \marcar{1}{5} & \marcar{2}{6} & \marcar{2}{7} & \marcar{1}{8} \\
+                    3             & 4             & 6             & \marcar{5}{9}
+                \end{bmatrix}
+                $$
 
-    %     \begin{columns}
-    %         \column{.4\textwidth}
-    %         $$
-    %         A =
-    %         \begin{bmatrix}
-    %             \circled{2} & 8           & 3           & 4 \\
-    %             \circled{5} & 3           & 4           & 5 \\
-    %             \circled{1} & \circled{2} & \circled{2} & \circled{1} \\
-    %             3           & 4           & 6           & \circled{5}
-    %         \end{bmatrix}
-    %         $$
+                \column{.4\textwidth}
+                $$
+                dp =
+                \begin{bmatrix}
+                    \marcar{18}{3} & 21             & 15            & 15 \\
+                    \marcar{16}{4} & 13             & 12            & 11 \\
+                    \marcar{11}{5} & \marcar{10}{6} & \marcar{8}{7} & \marcar{6}{8} \\
+                    18             & 15             & 11            & \marcar{5}{9}
+                \end{bmatrix}
+                $$
+            \end{columns}
+        }
 
-    %         \column{.4\textwidth}
-    %         $$
-    %         dp =
-    %         \begin{bmatrix}
-    %             \circled{18} & 21           & 15          & 15 \\
-    %             \circled{16} & 13           & 12          & 11 \\
-    %             \circled{11} & \circled{10} & \circled{8} & \circled{6} \\
-    %             18           & 15           & 11          & \circled{5}
-    %         \end{bmatrix}
-    %         $$
-    %     \end{columns}
-
-    %     \vspace{1em}
-
-    %     El camino óptimo es entonces el conjunto de coordenadas que marcamos hasta llegar a $(m, n)$.
-    % \end{frame}
+        \uncover<10->{
+            \vspace{1em}
+            El camino óptimo es entonces el conjunto de coordenadas que marcamos hasta llegar a $(m, n)$.
+        }
+    \end{frame}
 
     \begin{frame}
         \frametitle{Análisis de Complejidad}
