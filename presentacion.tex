@@ -3,11 +3,11 @@
 \usepackage[spanish, es-ucroman, es-noquoting]{babel}
 \usepackage{tikz} % Requerido dibujar los circulos en las casillas de las matrices
 \usepackage{amsmath}
-\usepackage[noend]{algpseudocode}
 \usepackage{qtree} % Requerido para dibujar árboles
 \usepackage{textpos} % Provee entorno textblock
 \usepackage{mathdots} % Provee macro \iddots
-\usepackage{bbding} % Provee \CheckmarkBold
+\usepackage{listings} % Provee entorno lstlisting
+\usepackage{calc}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Modo handout (comentar para versión presentación en pantalla/proyector)
@@ -24,10 +24,16 @@
 % Numerar las transparencias
 \setbeamertemplate{footline}[frame number]
 
-% Indentación del pseudocódigo
-\algrenewcommand\algorithmicindent{1.0em}
+% Formato del pseudocódigo
+\lstset{
+    basicstyle=\scriptsize\ttfamily,
+    keywordstyle=\bfseries,
+    showstringspaces=false,
+    morekeywords={procedure, if, and, for, to, return}
+}
+\renewcommand{\ttdefault}{pcr}
 
-% Macro para marcar las casillas que componen los caminos
+% Macros para marcar las casillas que componen los caminos
 % Parámetros: número, color, estilo
 \newcommand*\circledcolor[3]{\tikz[baseline=(char.base)]{
     \node[shape=circle,draw,inner sep=1pt,color=#2, #3] (char) {\hphantom{00}};
@@ -37,7 +43,7 @@
 \newcommand*\circledw[1]{\circledcolor{#1}{white}{solid}}
 \newcommand*\circledd[1]{\circledcolor{#1}{black}{dashed}}
 
-% Atajos
+% Atajo
 \newcommand{\matA}{A \in \mathbb{N}^{m \times n}}
 
 \title{Programación Dinámica}
@@ -492,59 +498,115 @@
         \end{minipage}
     \end{frame}
 
+    \newsavebox{\algoritmoTopDown}
+    \begin{lrbox}{\algoritmoTopDown}
+        \begin{lstlisting}[gobble=12]
+            dp = matriz[m][n] de enteros inicializada en -1
+            procedure C(A, i, j):
+              if dp[i][j] = -1:
+                if i = m and j = n: dp[i][j] = A[m][n]
+                if i < m and j = n: dp[i][j] = A[i][j] + C(A, i + 1, j)
+                if i = m and j < n: dp[i][j] = A[i][j] + C(A, i, j + 1)
+                if i < m and j < n: dp[i][j] = A[i][j] + min{C(A, i + 1, j),
+                                                               C(A, i, j + 1)}
+              return dp[i][j]
+        \end{lstlisting}
+    \end{lrbox}
+
     \begin{frame}
-        \frametitle{Función de Costo Top Down}
+        \frametitle{Algoritmo Top Down}
         \framesubtitle{Resolvamos el problema recursivamente, resolviendo cada subproblema sólo una vez}
 
-        El problema exhibe solapamiento de subproblemas y subestructura óptima, o sea que podemos aplicar la técnica de programación dinámica.
+        \vspace{1em}
+        Recordemos la fórmula recursiva:
 
         \vspace{1em}
+        $
+        c(A, i, j) =
+        \left\{
+            \begin{array}{ll}
+                a_{m,n}                                           & \mbox{si } i = m \mbox{ y } j = n \\
+                a_{i,j} + c(A, i + 1, j)                          & \mbox{si } i < m \mbox{ y } j = n \\
+                a_{i,j} + c(A, i, j + 1)                          & \mbox{si } i = m \mbox{ y } j < n \\
+                a_{i,j} + min \left\{
+                    \begin{array}{l}
+                        c(A, i + 1, j), \\
+                        c(A, i, j + 1)
+                    \end{array}
+                    \right\}                                      & \mbox{si } i < m \mbox{ y } j < n
+            \end{array}
+        \right.
+        $
 
-        \begin{algorithmic}
-            \State $dp \leftarrow arreglo[m][n]$ de enteros con valor inicial $-1$
-            \Procedure{c}{$A, i, j$}
-                \If{$i > m$ \textbf{or} $j > n$} \Comment{posición inválida}
-                    \State \textbf{return} $\infty$
-                \EndIf
-                \If{$dp[i][j] = -1$} \Comment{se computa sólo una vez}
-                    \If{$i = m$ \textbf{and} $j = n$} \Comment{caso base}
-                        \State $dp[i][j] = A[i][j]$
-                    \Else \Comment{caso general}
-                        \State $dp[i][j] = A[i][j] + min\{ \textsc{c}(A, i + 1, j), \textsc{c}(A, i, j + 1) \}$
-                    \EndIf
-                \EndIf
-                \State \textbf{return} $dp[i][j]$
-            \EndProcedure
-        \end{algorithmic}
+        \pause
+
+        \vspace{1em}
+        El algoritmo implementa la fórmula directamente.
+
+        \vspace{1em}
+        \usebox{\algoritmoTopDown}
     \end{frame}
 
+    \newsavebox{\algoritmoBottomUp}
+    \begin{lrbox}{\algoritmoBottomUp}
+        \begin{lstlisting}[gobble=12]
+            procedure C(A):
+              dp = matriz[m][n] de enteros
+              for j = n to 1:
+                for i = m to 1:
+                  if i = m and j = n: dp[i][j] = A[i][j]
+                  if i < m and j = n: dp[i][j] = A[i][j] + dp[i + 1][j]
+                  if i = m and j < n: dp[i][j] = A[i][j] + dp[i][j + 1]
+                  if i < m and j < n: dp[i][j] = A[i][j] + min{dp[i + 1][j],
+                                                               dp[i][j + 1]}
+                return dp[1][1]
+        \end{lstlisting}
+    \end{lrbox}
+
     \begin{frame}
-        \frametitle{Función de Costo Bottom Up}
+        \frametitle{Algoritmo Bottom Up}
         \framesubtitle{Reescribamos la función anterior de forma iterativa}
 
+        \vspace{0.5em}
         Recorremos la matriz de abajo a arriba y de derecha a izquierda, partiendo de $(m,n)$ y terminando en $(1, 1)$.
 
-        \vspace{1em}
+        \pause
 
-        \small{
-            \begin{algorithmic}
-                \Procedure{c}{$A$}
-                    \State $dp \leftarrow arreglo[m][n]$ de enteros
-                    \For{$j \leftarrow n$ \textbf{to} $1$}
-                        \For{$i \leftarrow m$ \textbf{to} $1$}
-                            \If{$i < m$ \textbf{and} $j < n$} \Comment{caso general}
-                                \State $dp[i][j] \leftarrow A[i][j] + min\{ dp[i+1][j], dp[i][j+1] \}$
-                            \ElsIf{$i < m$ \textbf{and} $j = n$} \Comment{última columna}
-                                \State $dp[i][j] \leftarrow A[i][j] + dp[i+1][j]$
-                            \ElsIf{$i = m$ \textbf{and} $j < n$} \Comment{última fila}
-                                \State $dp[i][j] \leftarrow A[i][j] + dp[i][j+1]$
-                            \Else \mbox{ } $dp[i][j] \leftarrow A[i][j]$  \Comment{caso base}
-                            \EndIf
-                        \EndFor
-                    \EndFor
-                    \State \textbf{return} $dp[1][1]$
-                \EndProcedure
-            \end{algorithmic}
+        \vspace{1em}
+        \usebox{\algoritmoBottomUp}
+
+        \pause
+
+        \vspace{-2.5em}
+        \begin{columns}
+            \column{.5\textwidth}
+            \begin{center}
+                $$A = 
+                \begin{bmatrix}
+                    \circledw{2} & \circledw{8} & \circledw{3} & \circledw{4} \\
+                    \circledw{5} & \circledw{3} & \circledw{4} & \circledw{5} \\
+                    \circledw{1} & \circledw{2} & \circledw{2} & \circledw{1} \\
+                    \circledw{3} & \circledw{4} & \circledw{6} & \circledw{5}
+                \end{bmatrix}
+                $$
+            \end{center}
+
+            \column{.5\textwidth}
+            \begin{center}
+                $$dp = 
+                \begin{bmatrix}
+                    \uncover<19->{\circled {18}} & \uncover<18->{\circledw{21}} & \uncover<17->{\circledw{15}} & \uncover<16->{\circledw{15}} \\
+                    \uncover<15->{\circledw{16}} & \uncover<14->{\circledw{13}} & \uncover<13->{\circledw{12}} & \uncover<12->{\circledw{11}} \\
+                    \uncover<11->{\circledw{11}} & \uncover<10->{\circledw{10}} & \uncover<9-> {\circledw{8}}  & \uncover<8-> {\circledw{6}}  \\
+                    \uncover<7-> {\circledw{18}} & \uncover<6-> {\circledw{15}} & \uncover<5-> {\circledw{11}} & \uncover<4-> {\circledw{5}}
+                \end{bmatrix}
+                $$
+            \end{center}
+        \end{columns}
+
+        \vspace{1em}
+        \uncover<20->{
+            Valor de una solución óptima: $C(A) = 18$.
         }
     \end{frame}
 
