@@ -7,6 +7,7 @@
 \usepackage{qtree} % Requerido para dibujar árboles
 \usepackage{textpos} % Provee entorno textblock
 \usepackage{mathdots} % Provee macro \iddots
+\usepackage{bbding} % Provee \CheckmarkBold
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Modo handout (comentar para versión presentación en pantalla/proyector)
@@ -30,7 +31,7 @@
 % Parámetros: número, color, estilo
 \newcommand*\circledcolor[3]{\tikz[baseline=(char.base)]{
     \node[shape=circle,draw,inner sep=1pt,color=#2, #3] (char) {\hphantom{00}};
-    \node[inner sep=1pt] (char) {#1};
+    \node[inner sep=1pt] (char) {$#1$};
 }}
 \newcommand*\circled[1]{\circledcolor{#1}{black}{solid}}
 \newcommand*\circledw[1]{\circledcolor{#1}{white}{solid}}
@@ -164,7 +165,7 @@
 
         \begin{minipage}[c][10em][c]{\textwidth}
             \begin{center}
-                \only<2-2>{
+                \only<2>{
                         $$ 
                         \begin{bmatrix}
                             \ddots & \vdots & \vdots \\
@@ -176,7 +177,7 @@
                         Caso base.
                 }
 
-                \only<3-3>{
+                \only<3>{
                     $$ 
                     \begin{bmatrix}
                         \ddots & \vdots      & \vdots       & \iddots\\
@@ -187,7 +188,7 @@
                     Sólo podemos movernos hacia la derecha.
                 }
 
-                \only<4-4>{
+                \only<4>{
                     $$ 
                     \begin{bmatrix}
                         \ddots  & \vdots       \\
@@ -200,7 +201,7 @@
                     Sólo podemos movernos hacia abajo.
                 }
 
-                \only<5-5>{
+                \only<5>{
                     $$ 
                     \begin{bmatrix}
                         \ddots  & \vdots       & \vdots       & \iddots \\
@@ -256,16 +257,16 @@
             \uncover<3->{
                 $c(A, 1, 2) =  a_{1,2} + min\{ c(A, 1, 3), c(A, 2, 2)\}$
             }
-
-            \uncover<4->{
-                \vspace{1em}
-                El subproblema $c(A, 2, 2)$ se computa más de una vez.
-            }
         \end{center}
+
+        \uncover<4->{
+            \vspace{1em}
+            El subproblema $c(A, 2, 2)$ se computa más de una vez.
+        }
 
         \begin{minipage}[c][8em][c]{\textwidth}
             \begin{center}
-                \only<1-1>{
+                \only<1>{
                         $
                         \begin{bmatrix}
                             \circled{2}  & \circledd{8} & \circledw{3} & \cdots \\
@@ -276,7 +277,7 @@
                         $
                 }
 
-                \only<2-2>{
+                \only<2>{
                         $
                         \begin{bmatrix}
                             \circledw{2} & \circled{8}  & \circledd{3} & \cdots \\
@@ -287,7 +288,7 @@
                         $
                 }
 
-                \only<3-3>{
+                \only<3>{
                         $
                         \begin{bmatrix}
                             2            & 8            & \circledw{3} & \cdots \\
@@ -312,43 +313,183 @@
             \end{center}
         \end{minipage}
 
-        \begin{center}    
-            \uncover<5->{
-                El ejercicio exhibe solapamiento de subproblemas.
-            }
-        \end{center}    
+        \uncover<5->{
+            El ejercicio exhibe solapamiento de subproblemas. \hfill $\square$
+        }
     \end{frame}
 
     \begin{frame}
         \frametitle{Subestructura Óptima}
         \framesubtitle{Veamos que las soluciones de los subproblemas también son soluciones óptimas}
 
-        Sea $\Sigma p$ la suma de las casillas por las que pasa un camino $p$.
+        \begin{minipage}[t][10em][t]{\textwidth}
+            \only<1-3>{
+                Sea $p$ un camino de costo mínimo entre $(1, 1)$ y $(m, n)$.
+            }
 
-        \vspace{1em}
+            \only<2-3>{
+                \vspace{1em}
+                Notación: \\
+                $\Sigma p = \text{ la suma de las coordenadas de la matriz que componen } p$.
+            }
 
-        Sea $p = \{(1, 1), \ldots, (i_k, j_k), (i_{k+1}, j_{k+1}), \ldots, (m, n)\}$ un camino con costo mínimo entre $(1,1)$ y $(m,n)$.
+            \only<3>{
+                \vspace{1em}
+                Entonces $p$ es un camino entre $(1, 1)$ y $(m, n)$ tal que $\Sigma p$ es mínima.
+            }
 
-        \vspace{1em}
+            \only<4-7>{
+                Descompongamos a $p$ en dos subcaminos: $p = p_1 \cup p_2$.
+            }
 
-        Descompongamos $p$ en dos caminos $p_1 = \{(1, 1), \ldots, (i_k, j_k)\}$ y $p_2 = \{(i_{k+1}, j_{k+1}), \ldots, (m, n)\}$, de manera que $p = p_1 \cup p_2$.
+            \only<7>{
+                \vspace{1em}
+                Entonces $\Sigma p = \Sigma p_1 + \Sigma p_2$.
+            }
 
-        \vspace{1em}
+            \only<8>{
+                Si el problema \textbf{no} exhibe subestructura óptima, entonces es posible que $p_2$ no sea un camino de costo mínimo entre $(3, 2)$ y $(m, n)$.
+            }
 
-        Supongamos que existe otro camino $p'_2$ entre $(i_{k+1}, j_{k+1})$ y $(m,n)$ tal que $\Sigma p'_2 < \Sigma p_2$, y sea $p' = p_1 \cup p'_2$.
+            \only<9-10>{
+                Supongamos que $p_2$ \textbf{no} es un camino de costo mínimo entre $(3, 2)$ y $(m, n)$. 
+            }
 
-        \vspace{1em}
+            \only<10>{
+                \vspace{1em}
+                Entonces existe otro camino $p_2'$ entre $(3, 2)$ y $(m, n)$ tal que
 
-        Entonces $\Sigma p' = \Sigma p_1 + \Sigma p'_2 < \Sigma p_1 + \Sigma p_2 = \Sigma p$.
+                $$\Sigma p_2' < \Sigma p_2.$$
+            }
 
-        \vspace{1em}
+            \only<11-16>{
+                ¡Pero entonces es mentira que $p$ es un camino de costo mínimo!
+            }
 
-        Absurdo, pues $p$ es un camino con costo mínimo.
+            \only<12-16>{
+                \vspace{1em}
+                Sea $p' = p_1 \cup p_2'$. \only<13-16>{Entonces:}
+            }
 
-        \vspace{1em}
+            \only<13-16>{
+                \begin{center}
+                    $
+                        \begin{array}{rcl}
+                            \Sigma p' & = & \Sigma p_1 + \Sigma p_2' \\
+                                      & < & \Sigma p_1 + \Sigma p_2  \\
+                                      & = & \Sigma p
+                        \end{array}
+                    $
+                \end{center}
+            }
 
-        Luego, el problema exhibe \textbf{subestructura óptima}.
+            \only<14-16>{
+                Luego $\Sigma p' < \Sigma p$. \only<15-16>{Absurdo, pues $p$ es un camino de costo mínimo.}
+            }
 
+            \only<16>{
+                \vspace{1em}
+                El ejercicio exhibe subestructura óptima. \hfill $\square$
+            }            
+        \end{minipage}
+
+        \begin{minipage}[t][8em][t]{\textwidth}
+            \begin{center}
+                \only<1-4>{
+                    $$ 
+                    \begin{bmatrix}
+                        \circled{2} & *           & *           & * \\
+                        \circled{5} & *           & *           & * \\
+                        \circled{1} & \circled{2} & \circled{2} & \circled{1} \\
+                        *           & *           & *           & \circled{5}
+                    \end{bmatrix}
+                    $$
+
+                    \only<1>{$p$}
+                    \only<2-3>{$\Sigma p = 2 + 5 + 1 + 2 + 2 + 1 + 5 = 18$}%
+                    \only<4>{$p = p_1 \cup p_2$}%
+                }
+
+                \only<5>{
+                    $$ 
+                    \begin{bmatrix}
+                        \circled{2} & *            & *            & * \\
+                        \circled{5} & *            & *            & * \\
+                        \circled{1} & \circledw{2} & \circledw{2} & \circledw{1} \\
+                        *           & *            & *            & \circledw{5}
+                    \end{bmatrix}
+                    $$
+
+                    $p_1$
+                }
+
+                \only<6>{
+                    $$ 
+                    \begin{bmatrix}
+                        \circledw{2} & *           & *           & * \\
+                        \circledw{5} & *           & *           & * \\
+                        \circledw{1} & \circled{2} & \circled{2} & \circled{1} \\
+                        *            & *           & *           & \circled{5}
+                    \end{bmatrix}
+                    $$
+
+                    $p_2$
+                }
+
+                \only<7>{
+                    $$ 
+                    \begin{bmatrix}
+                        \circled{2} & *           & *           & * \\
+                        \circled{5} & *           & *           & * \\
+                        \circled{1} & \circled{2} & \circled{2} & \circled{1} \\
+                        *           & *           & *           & \circled{5}
+                    \end{bmatrix}
+                    $$
+
+                    $\Sigma p = \Sigma p_1 + \Sigma p_2$
+                }
+
+                \only<8-9>{
+                    $$ 
+                    \begin{bmatrix}
+                        \circledw{2} & *           & *           & * \\
+                        \circledw{5} & *           & *           & * \\
+                        \circledw{1} & \circled{2} & \circled{2} & \circled{1} \\
+                        *            & *           & *           & \circled{5}
+                    \end{bmatrix}
+                    $$
+
+                    $p_2$
+                }
+
+                \only<10-11>{
+                    $$ 
+                    \begin{bmatrix}
+                        \circledw{2} & *            & *            & * \\
+                        \circledw{5} & *            & *            & * \\
+                        \circledw{1} & \circledd{2} & \circledw{2} & \circledw{1} \\
+                        *            & \circledd{*} & \circledd{*} & \circledd{5}
+                    \end{bmatrix}
+                    $$
+
+                    $p_2'$
+                }
+
+
+                \only<12-15>{
+                    $$ 
+                    \begin{bmatrix}
+                        \circled{2} & *            & *            & * \\
+                        \circled{5} & *            & *            & * \\
+                        \circled{1} & \circledd{2} & \circledw{2} & \circledw{1} \\
+                        *           & \circledd{*} & \circledd{*} & \circledd{5}
+                    \end{bmatrix}
+                    $$
+
+                    $p'$
+                }
+            \end{center}
+        \end{minipage}
     \end{frame}
 
     \begin{frame}
@@ -375,8 +516,6 @@
                 \State \textbf{return} $dp[i][j]$
             \EndProcedure
         \end{algorithmic}
-
-
     \end{frame}
 
     \begin{frame}
