@@ -7,7 +7,6 @@
 \usepackage{textpos} % Provee entorno textblock
 \usepackage{mathdots} % Provee macro \iddots
 \usepackage{listings} % Provee entorno lstlisting
-\usepackage{calc}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Modo handout (comentar para versión presentación en pantalla/proyector)
@@ -610,69 +609,84 @@
         }
     \end{frame}
 
-    \begin{frame}
-        \frametitle{Construcción de una Solución Óptima}
-        \framesubtitle{Ya sabemos el costo del camino óptimo; ahora hallemos ése camino}
+    % \begin{frame}
+    %     \frametitle{Construcción de una Solución Óptima}
+    %     \framesubtitle{Ya sabemos el costo del camino óptimo; ahora hallemos ése camino}
 
-        Construimos el camino óptimo mirando la matriz $dp$ donde guardamos los valores del camino óptimo hacia $(m, n)$ desde cada coordenada $(i, j)$.
+    %     Construimos el camino óptimo mirando la matriz $dp$ donde guardamos los valores del camino óptimo hacia $(m, n)$ desde cada coordenada $(i, j)$.
 
-        \vspace{1em}
+    %     \vspace{1em}
 
-        Nos paramos en $dp_{1,1}$, marcamos esa coordenada y nos movemos a la casilla contigua cuyo valor sea menor (sólo hacia la derecha ó abajo.) Repetimos hasta llegar a $dp_{m,n}$.
+    %     Nos paramos en $dp_{1,1}$, marcamos esa coordenada y nos movemos a la casilla contigua cuyo valor sea menor (sólo hacia la derecha ó abajo.) Repetimos hasta llegar a $dp_{m,n}$.
 
-        \begin{columns}
-            \column{.4\textwidth}
-            $$
-            A =
-            \begin{bmatrix}
-                \circled{2} & 8           & 3           & 4 \\
-                \circled{5} & 3           & 4           & 5 \\
-                \circled{1} & \circled{2} & \circled{2} & \circled{1} \\
-                3           & 4           & 6           & \circled{5}
-            \end{bmatrix}
-            $$
+    %     \begin{columns}
+    %         \column{.4\textwidth}
+    %         $$
+    %         A =
+    %         \begin{bmatrix}
+    %             \circled{2} & 8           & 3           & 4 \\
+    %             \circled{5} & 3           & 4           & 5 \\
+    %             \circled{1} & \circled{2} & \circled{2} & \circled{1} \\
+    %             3           & 4           & 6           & \circled{5}
+    %         \end{bmatrix}
+    %         $$
 
-            \column{.4\textwidth}
-            $$
-            dp =
-            \begin{bmatrix}
-                \circled{18} & 21           & 15          & 15 \\
-                \circled{16} & 13           & 12          & 11 \\
-                \circled{11} & \circled{10} & \circled{8} & \circled{6} \\
-                18           & 15           & 11          & \circled{5}
-            \end{bmatrix}
-            $$
-        \end{columns}
+    %         \column{.4\textwidth}
+    %         $$
+    %         dp =
+    %         \begin{bmatrix}
+    %             \circled{18} & 21           & 15          & 15 \\
+    %             \circled{16} & 13           & 12          & 11 \\
+    %             \circled{11} & \circled{10} & \circled{8} & \circled{6} \\
+    %             18           & 15           & 11          & \circled{5}
+    %         \end{bmatrix}
+    %         $$
+    %     \end{columns}
 
-        \vspace{1em}
+    %     \vspace{1em}
 
-        El camino óptimo es entonces el conjunto de coordenadas que marcamos hasta llegar a $(m, n)$.
-    \end{frame}
+    %     El camino óptimo es entonces el conjunto de coordenadas que marcamos hasta llegar a $(m, n)$.
+    % \end{frame}
 
     \begin{frame}
         \frametitle{Análisis de Complejidad}
         \framesubtitle{Comparemos nuestro algoritmo con la versión \textit{naïve}}
 
-        \begin{block}{Aplicando programación dinámica}
-            Llenamos un arreglo de dimensión $m \times n$ con costo $O(1)$ por coordenada. Cota de complejidad total: $O(m \times n)$.
+        \begin{block}{Aplicando programación dinámica} 
+            Llenamos un arreglo de dimensión $m \times n$ con costo $O(1)$ por coordenada. \uncover<2->{Cota de complejidad total: $O(m \times n)$.}
         \end{block}
 
-        \begin{block}{Versión \textit{naïve}}
-            \begin{columns}
-                \column{.55\textwidth}
-                Se produce un árbol (binario) de recursión de altura $m + n$. La cantidad máxima de nodos en un árbol de esta altura es $2^{m + n + 1} - 1$.
+        \begin{columns}
+            \column{.5\textwidth}
 
-                \vspace{1em}
+            \uncover<3->{
+                \begin{block}{Versión \textit{naïve}}
+                    Como el algoritmo top down, pero sin memoización.
 
-                La complejidad total está entonces acotada por $O(2^{m + n + 1})$.
+                    \uncover<4->{
+                        \vspace{1em}
+                        Se produce un árbol (binario) de recursión de altura $m + n$. La cantidad máxima de nodos en un árbol de esta altura es $2^{m + n + 1} - 1$.
+                    }
 
-                \column{.35\textwidth}
+                    \uncover<5->{
+                        \vspace{1em}
+                        La complejidad total está entonces acotada por $O(2^{m + n})$.
+                    }
+                \end{block}
+            }
 
-                \small{
-                    \Tree [.$(1,1)$ [ .$(2,1)$ [.$(3,1)$ {\ldots} ] [.$(2,2)$ {\ldots} ] ]
-                                    [ .$(1,2)$ [.$(2,2)$ {\ldots} ] [.$(1,3)$ {\ldots} ] ] ]
+            \column{.4\textwidth}
+            \begin{center}
+                \uncover<4->{
+                    \tiny{
+                        \Tree [.$c(A,1,1)$ [ .$c(A,2,1)$ [.$c(A,3,1)$ {\ldots} ] [.$c(A,2,2)$ {\ldots} ] ]
+                                           [ .$c(A,1,2)$ [.$c(A,2,2)$ {\ldots} ] [.$c(A,1,3)$ {\ldots} ] ] ]
+                    }
+
+                    \vspace{1em}
+                    \normalsize{Árbol de recursión del algoritmo naïve}
                 }
-            \end{columns}
-        \end{block}
+            \end{center}
+        \end{columns}
     \end{frame}
 \end{document}
