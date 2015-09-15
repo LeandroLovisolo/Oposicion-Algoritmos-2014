@@ -83,7 +83,7 @@
         \frametitle{Problema}
         \framesubtitle{Resolvamos un problema aplicando la técnica de programación dinámica}
 
-        \begin{block}{Recorriendo una matriz}
+        \begin{block}{Práctica 3, ejercicio 8}
             Sea $\matA$ una matriz de números naturales. Se desea obtener un camino que empiece en la casilla superior izquierda $(1, 1)$ y termine en la casilla inferior derecha $(m, n)$, tal que minimice la suma de los valores de las casillas por las que pasa. En cada casilla $(i, j)$ hay a lo sumo dos movimientos posibles: ir hacia abajo $(i + 1, j)$ o ir hacia la derecha $(i, j + 1)$.
         \end{block}
 
@@ -380,32 +380,32 @@
                 $$\Sigma p_2' < \Sigma p_2.$$
             }
 
-            \only<11-16>{
+            \only<11->{
                 ¡Pero entonces es mentira que $p$ es un camino de costo mínimo!
             }
 
-            \only<12-16>{
+            \only<12->{
                 \vspace{1em}
-                Sea $p' = p_1 \cup p_2'$. \only<13-16>{Entonces:}
+                Sea $p' = p_1 \cup p_2'$. \only<13->{Entonces:}
             }
 
-            \only<13-16>{
+            \only<13->{
                 \begin{center}
                     $
                         \begin{array}{rcl}
-                            \Sigma p' & = & \Sigma p_1 + \Sigma p_2' \\
-                                      & < & \Sigma p_1 + \Sigma p_2  \\
-                                      & = & \Sigma p
+                                          \Sigma p' & = & \Sigma p_1 + \Sigma p_2' \\
+                            \uncover<14->{          & < & \Sigma p_1 + \Sigma p_2  \\}
+                            \uncover<15->{          & = & \Sigma p}
                         \end{array}
                     $
                 \end{center}
             }
 
-            \only<14-16>{
-                Luego $\Sigma p' < \Sigma p$. \only<15-16>{Absurdo, pues $p$ es un camino de costo mínimo.}
+            \only<16->{
+                Luego $\Sigma p' < \Sigma p$. \only<17->{Absurdo, pues $p$ es un camino de costo mínimo.}
             }
 
-            \only<16>{
+            \only<18>{
                 \vspace{1em}
                 El ejercicio exhibe subestructura óptima. \hfill $\square$
             }            
@@ -494,7 +494,7 @@
                 }
 
 
-                \only<12-15>{
+                \only<12-17>{
                     $$ 
                     \begin{bmatrix}
                         \circled{2} & *            & *            & * \\
@@ -571,7 +571,7 @@
                   if i = m and j < n: dp[i][j] = A[i][j] + dp[i][j + 1]
                   if i < m and j < n: dp[i][j] = A[i][j] + min{dp[i + 1][j],
                                                                dp[i][j + 1]}
-                return dp[1][1]
+              return dp[1][1]
         \end{lstlisting}
     \end{lrbox}
 
@@ -626,7 +626,7 @@
         \frametitle{Construcción de una Solución Óptima}
         \framesubtitle{Ya sabemos el costo del camino óptimo; ahora hallemos ése camino}
 
-        Construimos el camino óptimo mirando la matriz $dp$ y siguiendo el algoritmo ``al revés'', partiendo de $(1, 1)$ hasta llegar a $(m, n)$.
+        Construimos un camino óptimo mirando la matriz $dp$ y siguiendo la lógica del algoritmo, partiendo de $(1, 1)$ hasta llegar a $(m, n)$.
 
         \uncover<2->{
             \vspace{1em}
@@ -661,7 +661,7 @@
 
         \uncover<10->{
             \vspace{1em}
-            El camino óptimo es entonces el conjunto de coordenadas que marcamos hasta llegar a $(m, n)$.
+            Un camino óptimo es entonces el conjunto de coordenadas que marcamos hasta llegar a $(m, n)$.
         }
     \end{frame}
 
